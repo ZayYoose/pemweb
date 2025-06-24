@@ -1,0 +1,30 @@
+@startuml
+title Arsitektur Hosting Web Redundan (Anti-SPOF)
+
+actor User
+
+User -> DNS : Request akses domain
+DNS -> LoadBalancer : Resolve dan arahkan
+LoadBalancer -> WebServer1 : Arahkan trafik
+LoadBalancer -> WebServer2
+LoadBalancer -> WebServerN
+
+WebServer1 -> DB_Master : Query data
+WebServer2 -> DB_Slave1
+WebServerN -> DB_SlaveN
+
+DB_Master <-> DB_Slave1 : Replikasi
+DB_Master <-> DB_SlaveN
+
+WebServer1 --> Storage : Akses file statis
+WebServer2 --> Storage
+WebServerN --> Storage
+
+User --> ISP1
+User --> ISP2
+ISP1 --> Firewall1
+ISP2 --> Firewall2
+Firewall1 --> LoadBalancer
+Firewall2 --> LoadBalancer
+
+@enduml

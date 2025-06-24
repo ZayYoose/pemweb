@@ -1,0 +1,45 @@
+@startuml
+left to right direction
+
+actor "Admin Operasional Digital" as Admin
+actor "Tim Akademik" as Akademik
+actor "Tim Administrasi" as Adminis
+actor "Pengajar" as Pengajar
+actor "Peserta Didik" as Peserta
+
+package "HRM" {
+  Adminis --> (Mengelola Data Departemen)
+  Adminis --> (Mengelola Absensi Pegawai)
+  Akademik --> (Mengelola Absensi Pengajar)
+  Adminis --> (Mengelola Gaji Pegawai)
+  Adminis --> (Mengelola Gaji Pengajar)
+  Adminis --> (Mengelola Cuti Pengajar)
+  Akademik --> (Melihat Status Ketersediaan Pengajar)
+}
+
+package "LMS" {
+  Akademik --> (Mengelola Event Course)
+  Pengajar --> (Mengunggah Modul Pembelajaran)
+  Pengajar --> (Memberikan Tugas/Quiz)
+  Pengajar --> (Menilai Tugas)
+  Akademik --> (Rekap Nilai Peserta)
+  Peserta --> (Melihat Nilai)
+  Akademik --> (Penerbitan Sertifikat)
+
+  (Mengelola Event Course) ..> (Mengelola Modul Pembelajaran) : include
+  (Mengunggah Modul Pembelajaran) ..> (Memberikan Tugas/Quiz) : include
+}
+
+package "Pendaftaran & Pembayaran" {
+  Peserta --> (Registrasi Peserta Didik)
+  Peserta --> (Pemilihan Course)
+  (Pemilihan Course) ..> (Pembayaran via Midtrans) : extend
+}
+
+package "Autentikasi & Keamanan" {
+  Admin --> (Login dengan Role-based Access)
+  Pengajar --> (Login dengan Role-based Access)
+  Peserta --> (Login dengan Role-based Access)
+}
+
+@enduml

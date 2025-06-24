@@ -1,0 +1,62 @@
+@startuml
+' Menyusun diagram Use Case untuk sistem pembelajaran di EU Academy
+
+left to right direction
+
+actor "Admin Operasional Digital" as AdminOp
+actor "Tim Akademik" as TimAkademik
+actor "Tim Administrasi" as TimAdmin
+actor "Pengajar" as Pengajar
+actor "Peserta Didik" as Peserta
+
+' Paket fungsional HRM untuk pengelolaan pegawai dan pengajaran
+package "HRM (Human Resource Management)" {
+  TimAdmin --> (Mengelola Absensi Pegawai) : Mencatat kehadiran pegawai
+  TimAdmin --> (Mengelola Gaji Pegawai) : Mengelola pembayaran gaji pegawai
+  TimAdmin --> (Mengelola Cuti Pegawai) : Memproses cuti pegawai
+  
+  TimAdmin --> (Mengelola Absensi Pengajar) : Menyusun kehadiran pengajar
+  TimAdmin --> (Mengelola Gaji Pengajar) : Mengelola pembayaran gaji pengajar
+  TimAdmin --> (Mengelola Cuti Pengajar) : Memproses cuti pengajar
+  AdminOp --> (Mengelola Data Departemen) : Menyusun data departemen akademik dan administrasi
+}
+
+' Paket fungsional LMS untuk manajemen pembelajaran
+package "LMS (Learning Management System)" {
+  Pengajar --> (Mengunggah Modul Pembelajaran) : Menyediakan materi pembelajaran
+  Pengajar --> (Memberikan Tugas) : Memberikan quiz/tugas kepada peserta didik
+  Pengajar --> (Menilai Tugas) : Menilai tugas yang dikumpulkan oleh peserta didik
+  TimAkademik --> (Rekap Nilai Peserta) : Mengelola nilai peserta didik
+  Peserta --> (Melihat Nilai) : Peserta melihat hasil nilai mereka
+  
+  Peserta --> (Melakukan Pembayaran) : Pembayaran kursus melalui Midtrans
+  (Melakukan Pembayaran) --> (Verifikasi Pembayaran via Midtrans) : include
+  
+  TimAkademik --> (Penerbitan Sertifikat) : Mengeluarkan sertifikat untuk peserta yang lulus
+  Pengajar --> (Menyesuaikan Jadwal Mengajar) : Menyesuaikan jadwal pengajaran di kelas
+  
+  (Mengelola Event Course) ..> (Pembayaran via Midtrans) : extend
+  (Mengelola Absensi Pengajar) --> (Notifikasi Absensi Pengajar) : include
+  (Memberikan Tugas) --> (Notifikasi Pengumpulan Tugas) : include
+}
+
+' Fitur notifikasi dan pengelolaan pembelajaran
+package "Notifications" {
+  Pengajar --> (Notifikasi Pengumpulan Tugas) : Mengingatkan peserta didik mengumpulkan tugas
+  TimAkademik --> (Notifikasi Penerbitan Sertifikat) : Mengirim notifikasi sertifikat kepada peserta
+}
+
+' Sistem notifikasi untuk pembayaran
+package "Payment" {
+  Peserta --> (Notifikasi Pembayaran Berhasil) : Menerima konfirmasi pembayaran berhasil
+  (Notifikasi Pembayaran Berhasil) --> (Notifikasi Pembayaran melalui Email) : include
+}
+
+' Fitur manajemen status pengajar dan pengelolaan materi
+package "Schedule & Status Management" {
+  AdminOp --> (Mengelola Jadwal Kelas) : Mengatur jadwal kelas untuk setiap pengajaran
+  Pengajar --> (Menyesuaikan Jadwal Mengajar) : Menyesuaikan jadwal mengajar sesuai dengan kebutuhan
+  AdminOp --> (Menyesuaikan Status Pengajar) : Melihat status pengajar apakah mengajar atau cuti
+}
+
+@enduml
